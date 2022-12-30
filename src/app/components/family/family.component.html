@@ -1,0 +1,268 @@
+<div class="row col-md-12 g-2">
+    <div class="list-group col-lg-2 me-5" id="list-tab" role="tablist">
+	<a class="list-group-item list-group-item-action" id="list-home-list" data-bs-toggle="list" [routerLink]="['/system']" role="tab" aria-controls="list-home">Inicio</a>
+	<a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" [routerLink]="['/notifications']" role="tab" aria-controls="list-settings">Notificaciones</a>
+	<a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list" [routerLink]="['/cite']" role="tab" aria-controls="list-profile">Solicitar Cita</a>
+	<a class="list-group-item list-group-item-action active" id="list-messages-list" data-bs-toggle="list" [routerLink]="['/familys']" role="tab" aria-controls="list-messages">Citas Familiares</a>
+	<a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list" [routerLink]="['/cites']" role="tab" aria-controls="list-messages" >Ver citas</a>
+    </div>
+
+    <div class="col-md-9">
+	<h2 class="float-start m-0">Familiares</h2>
+	<!-- <button type="button" class="float-end btn btn-info btn-sm mt-1" [routerLink]="['/family']" title="Agregar Familiar">Agregar</button> -->
+	<button type="button" class="btn float-end btn-sm mt-1 btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Agregar</button>
+	<div class="clearfix"></div>
+	<hr class="mt-1">
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+		    <div class="modal-header">
+			<h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Familiar</h1>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		    </div>
+		    <div class="modal-body">
+			<div class="alert alert-success mb-0" *ngIf="status == 'success'">
+			    {{message}}
+			</div>
+
+			<div class="alert alert-danger" *ngIf="status == 'error'">{{message}}</div>
+			<form class=" row g-2" #addFamily="ngForm" (ngSubmit)="onSubmit(addFamily)">
+	    
+			    <div class="mt-3 col-md-6">
+				<label for="name" class="label-control">Nombres</label>
+				<input type="text" 
+				    name="name" 
+				    id="name" 
+				    class="form-control"
+				    #name="ngModel"
+				    [(ngModel)]="family.name"
+				    pattern="[a-zA-Z\s]{3,20}"
+				    required
+				>
+				<small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">
+				    nombre invalido, debe contener de 3 a 20 caracteres
+				</small>
+			    </div>
+
+			    <div class="mt-3 col-md-6">
+				<label for="lastname" class="label-control">Apellidos</label>
+				<input type="text" 
+				    name="lastname" 
+				    id="lastname" 
+				    class="form-control"
+				    #lastname="ngModel"
+				    [(ngModel)]="family.lastname"
+				    pattern="[a-zA-Z\s]{5,20}"
+				    required>
+				<small class="invalid-feedback d-block" *ngIf="!lastname.valid && lastname.touched">
+				    apellidos invalidos, debe contener de 5 a 20 caracteres
+				</small>
+			    </div>
+
+			    <div class="mt-3">
+				<label for="type_document" class="label-control">Tipo de documento</label>
+				<select name="type_document" 
+					id="type_document"
+					class="form-control"
+					#type_document="ngModel"
+					[(ngModel)]="family.type_document"
+				    >
+				    <option value="cedula de ciudadania">cedula de ciudadania</option>
+				    <option value="tarjeta de identidad">tarjeta de identidad</option>
+				</select>	
+				<small class="invalid-feedback" *ngIf="type_document.value == true">
+				    seleccione tipo de documento 
+				</small>
+			    </div>
+	    
+			    <div class="mt-3">
+				<label for="document" class="label-control">Numero de Documento</label>
+				<input type="text"
+				    name="document"
+				    id="document" 
+				    class="form-control"
+				    #document="ngModel"
+				    [(ngModel)]="family.document"
+				    pattern="[a-zA-Z0-9\s]{7,20}"
+				    required
+				    >
+				<small class="invalid-feedback d-block" *ngIf="!document.valid && document.touched">
+				    documento invalido, debe contener de 7 a 20 caracteres
+				</small>
+			    </div>
+
+			    <div class="mt-3">
+				<label for="phone" class="label-control">Telefono</label>
+				<input type="text" 
+				    name="phone" 
+				    id="phone" 
+				    class="form-control"
+				    #phone="ngModel"
+				    [(ngModel)]="family.phone"
+				    pattern="[0-9]{10,10}"
+				    required
+				    >
+
+				<small class="invalid-feedback d-block" *ngIf="!phone.valid && phone.touched">
+				    numero de telefono invalido, debe contener 10 digitos
+				</small>
+			    </div>
+			    
+			    <div class="modal-footer pb-1">
+				<button type="submit" class="float-end m-0 btn btn-sm btn-success" [disabled]="addFamily.invalid">Agregar</button>
+			    </div>
+
+			</form>
+
+		    </div> 
+		</div>
+	    </div>
+	</div>
+
+
+
+
+
+
+
+	<!-- desplegar listado de familiares -->
+	<ul class="list-group mt-0">
+	    <li class="list-group-item" *ngFor="let family of familys">
+		{{family.name}} {{family.lastname}}
+	     <!-- <button type="button" [routerLink]="['/cite-family/'+family.id]" class="btn btn-sm btn-info float-end me-1">Solicitar cita</button> -->
+		<button type="button" class="btn btn-sm float-end btn-primary" data-bs-toggle="modal" [attr.data-bs-target]="'#addCite'+family.id" (click)="getFamily(family.id)" data-bs-whatever="@mdo">Solicitar Cita</button> 
+	    
+		<div class="modal fade" [id]="'addCite'+family.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+		    <div class="modal-content">
+		      <div class="modal-header">
+			<h1 class="modal-title fs-5" id="exampleModalLabel">Solicitar cita medica</h1>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+			<div class="alert alert-success" *ngIf="statusCite == 'success'">{{message}}</div>
+			<form class="row g-2" #addCite="ngForm" (ngSubmit)="citeSubmit(addCite)">
+	    
+			    <div class="mt-3 col-md-6">
+				<label for="name" class="label-control">Nombres</label>
+				<input type="text"
+				    class="form-control"
+				    name="name" 
+				    id="name"
+				    #name="ngModel"
+				    [(ngModel)]="cite.name"
+				    readonly
+				    >
+				<small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block ps-1">
+				    los nombre es invalido, debe contener de 3 a 20 caracteres
+				</small>
+			    </div>
+
+			    <div class="mt-3 col-md-6">
+				<label for="lastname" class="label-control">Apellidos</label>
+				<input type="text"
+				    class="form-control"
+				    name="lastname" 
+				    id="lastname"
+				    #lastname="ngModel"
+				    [(ngModel)]="cite.lastname"
+				    readonly
+				    >
+				<small *ngIf="!lastname.valid && lastname.touched" class="invalid-feedback d-block ps-1">
+				    Los apellidos son invalidos, debe contener de 3 a 20 caracteres
+				</small>
+			    </div>
+
+			    <div class="mt-3 col-md-6">
+				<label for="type_document" class="label-control">Tipo de documento</label>
+				<input type="text"
+				    class="form-control"
+				    name="type_document" 
+				    id="type_document"
+				    #type_document="ngModel"
+				    [(ngModel)]="cite.type_document"
+				    readonly
+				    >
+				<small *ngIf="!type_document.valid && type_document.touched" class="invalid-feedback d-block ps-1">
+				    tipo de documento invalido
+				</small>
+			    </div>
+			    
+			    <div class="mt-3 col-md-6">
+				<label for="document" class="label-control">Documento</label>
+				<input type="text"
+				    class="form-control"
+				    name="document" 
+				    id="document"
+				    #document="ngModel"
+				    [(ngModel)]="cite.document"
+				    readonly
+				    >
+				<small *ngIf="!document.valid && document.touched" class="invalid-feedback d-block ps-1">
+				    numero de documento es invalido, debe contener de 7 a 20 caracteres y numeros
+				</small>
+			    </div>
+			    
+			    <div class="mt-3 col-md-6">
+				<label for="phone" class="label-control">Telefono</label>
+				<input type="text"
+				    class="form-control"
+				    name="phone" 
+				    id="phone"
+				    #phone="ngModel"
+				    [(ngModel)]="cite.phone"
+				    pattern="[0-9]{10,10}"
+				    required
+				    >
+				<small *ngIf="!phone.valid && phone.touched" class="invalid-feedback d-block ps-1">
+				    telefono incorrecto, debe contener 10 numeros
+				</small>
+			    </div>
+			    
+			    <div class="mt-3 col-md-6">
+				<label for="eps" class="label-control">Eps</label>
+				<input type="text"
+				    class="form-control"
+				    name="eps" 
+				    id="eps"
+				    #eps="ngModel"
+				    [(ngModel)]="cite.eps"
+				    pattern="[a-zA-Z\s]{5,20}"
+				    required>
+				<small *ngIf="!eps.valid && eps.touched" class="invalid-feedback d-block ps-1">
+				    eps invalido, debe contener de 5 a 20 caracteres
+				</small>
+			    </div>
+			    
+			    <div class="mt-3 col-md-12">
+				<label for="eps" class="label-control">Citas</label>
+				<select name="citas" id="citas" #cita="ngModel" [(ngModel)]="cite.id_speciality" class="form-control">
+				    <option value="0">Seleccione cita medica</option>
+				    <option *ngFor="let speciality of specialitys" [value]="speciality.id">{{speciality.specialitys}}</option>
+				</select>
+				<small *ngIf="cita.value == 0" class="invalid-feedback d-block ps-1">
+				    seleccione la especialidad
+				</small>
+			    </div>
+
+
+			    <div class="modal-footer mt-1">
+				<button type="submit" class="btn btn-sm btn-success" [disabled]="addCite.invalid">Solicitar</button>
+			    </div>
+
+			</form>
+
+
+		      </div> 
+		    </div>
+		  </div>
+		</div>
+
+	    </li> 
+	</ul>
+
+
+    </div> 
+
+</div>

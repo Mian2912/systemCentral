@@ -1,0 +1,193 @@
+<div class="row col-md-12 g-2">
+    <div class="list-group col-lg-2 me-5" id="list-tab" role="tablist">
+	<a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages" [routerLink]="['/cites']">Ver citas</a>
+    </div>
+
+    <div class="col-lg-9">
+	<h2 class="m-0 p-0">Informacion de la cita</h2>
+	<hr>
+
+	<form class="row g-2" #citeForm="ngForm" (ngSubmit)="onSubmit(citeForm)" enctype="multipart/form-data">
+	    
+	    <div class="mt-3 col-md-6">
+		<label for="name" class="label-control">Nombres</label>
+		<input type="text"
+		       class="form-control"
+		    name="name" 
+		    id="name"
+		    #name="ngModel"
+		    [(ngModel)]="cite.name"
+		    readonly
+		    >
+	    </div>
+	    
+	    <div class="mt-3 col-md-6">
+		<label for="lastname" class="label-control">Apellidos</label>
+		<input type="text"
+		       class="form-control"
+		    name="lastname" 
+		    id="lastname"
+		    #lastname="ngModel"
+		    [(ngModel)]="cite.lastname"
+		    readonly
+		    >
+	    </div>
+	    
+	    <div class="mt-3 col-md-6">
+		<label for="type_document" class="label-control">Tipo de documento</label>
+		<input type="text"
+		    class="form-control"
+		    name="type_document" 
+		    id="type_document"
+		    #type_document="ngModel"
+		    [(ngModel)]="cite.type_document"
+		    readonly
+		>
+	    </div>
+
+	    <div class="mt-3 col-md-6">
+		<label for="document" class="label-control">Documento</label>
+		<input type="text"
+		    class="form-control"
+		    name="document" 
+		    id="document"
+		    #document="ngModel"
+		    [(ngModel)]="cite.document"
+		    readonly
+		    >
+	    </div>
+
+	    <div class="mt-3 col-md-6">
+		<label for="phone" class="label-control">Telefono</label>
+		<input type="text"
+		       class="form-control"
+		    name="phone" 
+		    id="phone"
+		    #phone="ngModel"
+		    [(ngModel)]="cite.phone"
+		    readonly
+		    >
+	    </div>
+
+	    <div class="mt-3 col-md-6">
+		<label for="eps" class="label-control">Eps</label>
+		<input type="text"
+		    class="form-control"
+		    name="eps" 
+		    id="eps"
+		    #eps="ngModel"
+		    [(ngModel)]="cite.eps"
+		    readonly
+		    >
+	    </div>
+	    
+	    <div class="mt-3 col-md-6">
+		<label for="speciality" class="label-control">Especialidad</label>
+		<input type="text"
+		    class="form-control"
+		    name="speciality" 
+		    id="speciality"
+		    #speciality="ngModel"
+		    [(ngModel)]="cite.id_speciality"
+		    readonly
+		    >
+	    </div>
+		
+	    <div class="mt-3 col-md-6" *ngIf="cite.id_doctors">
+		<label for="doctor" class="label-control">Medico</label>
+		<input type="text"
+		    class="form-control"
+		    name="doctor" 
+		    id="doctor"
+		    #doctors="ngModel"
+		    [(ngModel)]="cite.id_doctors"
+		    readonly
+		    >
+	    </div>
+	    
+	    <div class="mt-3 col-md-6" *ngIf="cite.date">
+		<label for="date" class="label-control">Fecha de la cita</label>
+		<input type="text" 
+		    name="date" 
+		    id="date" #date="ngModel" 
+		    class="form-control"
+		    [(ngModel)]="cite.date" 
+		    readonly>
+	    </div>
+
+	    <div class="mt-3 col-md-6" *ngIf="cite.hour">
+		<label for="hour">Hora de la cita</label>
+		<input type="text" 
+		    name="hour" 
+		    id="hour"
+		    class="form-control"
+		    #hour="ngModel"
+		    [(ngModel)]="cite.hour"
+		    readonly
+		    >
+	    </div>
+
+	    <div class="mt-3 col-md-6" *ngIf="cite.required_files == 'orden' || cite.required_files == 'Autorizacion y Orden'">
+		<label for="formFile" class="label-control">Orden</label>
+		<angular-file-uploader
+		    [config]="afuConfig"
+		    (ApiResponse)="ordenFile($event)">
+		</angular-file-uploader>
+	    </div>
+	    
+	    <div class="mt-3 col-md-6" *ngIf="cite.required_files == 'Autorizacion' || cite.required_files == 'Autorizacion y Orden'">
+		<label for="formFile" class="label-control">Autorizacion</label>
+		<angular-file-uploader
+		    [config]="afuConfig"
+		    (ApiResponse)="authorizationFile($event)">
+		</angular-file-uploader>	
+	    </div>
+
+
+	    <div class="mt-3">
+		<label for="exampleFormControlTextarea1" class="form-label">Recomendaciones</label>
+		<textarea class="form-control" name="recommendations" id="recommendations" rows="3" #recommendations="ngModel" [(ngModel)]="cite.recommendations"></textarea>
+		<small class="invalid-feedback d-block" *ngIf="!recommendations.valid && recommendations.touched">
+		    asjdhakjshdjkahskdjahk
+		</small>
+	    </div>
+
+	    <div class="mt-3 col-md-12">
+		<button type="submit" [disabled]="citeForm.invalid" class="btn btn-success btn-sm ms-2 float-end">Enviar</button>
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-sm btn-danger float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
+		  Eliminar
+		</button>
+
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+		    <div class="modal-content">
+		      <div class="modal-header">
+			<h1 class="modal-title fs-5 m-0" id="exampleModalLabel">Cancelar Cita</h1>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+			Ingrese el motivo por el cual desea cancelar la cita
+			<form #formCanceld="ngForm" (ngSubmit)="deleteCiteMotive(formCanceld)">
+			    <textarea name="motiveCanceld" id="motiveCanceld" class="form-control" cols="30" rows="3" #motiveCanceld="ngModel" [(ngModel)]="cite.motiveCanceld" required></textarea>
+			    <small class="invalid-feedback d-block" *ngIf="!motiveCanceld.valid && motiveCanceld.touched">
+				es requerido el campo
+			    </small> 
+			    <div class="modal-footer mt-3">
+				<button type="button" class="btn btn-sm btn-info" data-bs-dismiss="modal">Cerrar</button>
+				<button type="submit" class="btn btn-sm btn-danger" data-bs-dismiss="modal" [disabled]="formCanceld.invalid">Eliminar</button>
+			    </div>
+
+			</form>
+		      </div> 
+		    </div>
+		  </div>
+		</div>
+	    </div>
+
+	</form>
+    </div>
+
+</div>
+

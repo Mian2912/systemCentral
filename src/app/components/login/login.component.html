@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-md-5 m-auto ">
+    <div class="card bd-1">
+	<div class="card-h">	
+	    <img src="/assets/img/user.png" class="card-img-top logo-user" alt="...">
+	</div>
+	
+      <div class="card-body">
+        <h3 class="card-title">Iniciar Sesion</h3>
+	<div class="alert alert-info" *ngIf="!status">
+	    Ingrese sus credenciales 
+	</div>
+	
+	<div class="alert alert-danger" *ngIf="status == 'error'">
+	    {{message}}
+	</div>
+
+	<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+	    <div class="input-group mb-3">
+		<span class="input-group-text" id="basic-addon1">@</span>
+		<input type="email" 
+		    class="form-control" 
+		    placeholder="Correo electronico" 
+		    name="email"
+		    id="email"
+		    aria-label="Correo electronico" 
+		    aria-describedby="basic-addon1"
+		    #email="ngModel" 
+		    [(ngModel)]="user.email"
+		    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+		    required>
+		<small class="invalid-feedback d-block ps-2" *ngIf="!email.valid && email.touched">
+		    el correo electronico es invalido
+		</small>
+	    </div>
+	    <div class="input-group mb-3">
+		<span class="input-group-text" id="basic-addon1">***</span>
+		<input type="password" 
+		    class="form-control" 
+		    name="password"
+		    id="password"
+		    placeholder="Contraseña" 
+		    aria-label="Contraseña" 
+		    aria-describedby="basic-addon1"
+		    #password="ngModel"
+		    [(ngModel)]="user.password"
+		    pattern="[a-zA-Z\d]{8,12}"
+		    required>
+		<small class="invalid-feedback d-block ps-2" *ngIf="!password.valid && password.touched">
+		    la contraseña es invalida, debe contener de 8 a 12 caracteres y numeros
+		</small>
+	    </div>
+	    <button type="submit" class="btn btn-success" [disabled]="loginForm.invalid">Ingresar</button>
+	</form>
+      </div>
+    </div>
+  </div>    
+</div>
